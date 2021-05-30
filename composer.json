@@ -13,7 +13,7 @@
         "piece-of-kake/exception": "^1.1",
         "piece-of-kake/value-object": "^1.0",
         "piece-of-kake/validator": "^1.0",
-        "piece-of-kake/db-query-builder": "^1.0",
+        "piece-of-kake/sql-query-builder": "^1.0",
         "psr/http-message": "^1.0",
         "psr/container": "^1.0",
         "ext-json": "*",

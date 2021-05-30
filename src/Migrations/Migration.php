@@ -2,18 +2,18 @@
 
 namespace PoK\Migrations;
 
-use PoK\DBQueryBuilder\DBClientInterface;
-use PoK\DBQueryBuilder\Interfaces\CanCompile;
+use PoK\SQLQueryBuilder\SQLClientInterface;
+use PoK\SQLQueryBuilder\Interfaces\CanCompile;
 
 abstract class Migration
 {
 
     /**
-     * @var DBClientInterface
+     * @var SQLClientInterface
      */
     private $client;
 
-    public function __construct(DBClientInterface $client)
+    public function __construct(SQLClientInterface $client)
     {
         $this->client = $client;
     }

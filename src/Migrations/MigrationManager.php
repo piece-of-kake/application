@@ -2,24 +2,24 @@
 
 namespace PoK\Migrations;
 
-use PoK\DBQueryBuilder\Conditions\Equal;
-use PoK\DBQueryBuilder\Conditions\LAnd;
-use PoK\DBQueryBuilder\DBClientInterface;
-use PoK\DBQueryBuilder\Queries\Delete;
-use PoK\DBQueryBuilder\Queries\TableExists;
-use PoK\DBQueryBuilder\Queries\CreateTable;
-use PoK\DBQueryBuilder\Queries\Select;
+use PoK\SQLQueryBuilder\Conditions\Equal;
+use PoK\SQLQueryBuilder\Conditions\LAnd;
+use PoK\SQLQueryBuilder\SQLClientInterface;
+use PoK\SQLQueryBuilder\Queries\Delete;
+use PoK\SQLQueryBuilder\Queries\TableExists;
+use PoK\SQLQueryBuilder\Queries\CreateTable;
+use PoK\SQLQueryBuilder\Queries\Select;
 use PoK\Exceptions\Internal\FailedMigrationException;
 use PoK\ValueObject\Collection;
 use PoK\Helpers\FileHelper;
-use PoK\DBQueryBuilder\Queries\Insert;
+use PoK\SQLQueryBuilder\Queries\Insert;
 use PoK\ValueObject\TypePositiveInteger;
 use PoK\ValueObject\TypeString;
 
 class MigrationManager
 {
     /**
-     * @var DBClientInterface
+     * @var SQLClientInterface
      */
     private $client;
 
@@ -30,7 +30,7 @@ class MigrationManager
         $this->migrationsPath = $migrationsPath;
     }
 
-    public function up(DBClientInterface $client)
+    public function up(SQLClientInterface $client)
     {
         $this->client = $client;
         
@@ -40,7 +40,7 @@ class MigrationManager
         return $this->commitAvailableMigrations();
     }
 
-    public function down(DBClientInterface $client)
+    public function down(SQLClientInterface $client)
     {
         $this->client = $client;
 

@@ -2,7 +2,7 @@
 
 namespace PoK\Logging;
 
-use PoK\DBQueryBuilder\Profiler\RecordQueryInterface;
+use PoK\SQLQueryBuilder\Profiler\RecordQueryInterface;
 
 class SQLProfiler implements RecordQueryInterface
 {
