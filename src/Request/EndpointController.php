@@ -35,7 +35,7 @@ class EndpointController {
         
         $methodDirectoryName = ucfirst(strtolower($this->request->getMethod()));
         
-        $endpointClassName = "\App\Endpoints\\$domain\\$methodDirectoryName\\$endpoint";
+        $endpointClassName = "\App\Endpoint\\$domain\\$methodDirectoryName\\$endpoint";
 
         // ToDo: throw a MissingEndpointException exception if the class doesn't exist
 

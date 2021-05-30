@@ -2,9 +2,10 @@
 
 namespace PoK\Request;
 
+use PoK\Validator\Request\ParameterManipulationInterface;
 use PoK\ValueObject\Collection;
 
-class ProcessorRequest
+class ProcessorRequest implements ParameterManipulationInterface
 {
     /**
      * @var Collection

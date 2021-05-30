@@ -144,10 +144,8 @@ abstract class Endpoint
     private function runProcessor(): Response
     {
         $this->processor->initialize($this->processorRequest, $this->container);
-        /**
-         * @var Response $response
-         */
-        $response = $this->processor();
+        $processor = $this->processor;
+        $response = $processor();
         $response->setResponseDataFormatter($this->formatter);
         if ($this->isJson()) {
             $response->isJson();
