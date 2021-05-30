@@ -37,10 +37,11 @@ class EndpointController {
         
         $endpointClassName = "\App\Endpoint\\$domain\\$methodDirectoryName\\$endpoint";
 
-        // ToDo: throw a MissingEndpointException exception if the class doesn't exist
+        return $this->executeEndpoint(new $endpointClassName($this->request, $this->container));
+    }
 
-        $endpointClass = new $endpointClassName($this->request, $this->container);
-        
-        return $endpointClass();
+    private function executeEndpoint(Endpoint $endpoint)
+    {
+        return $endpoint();
     }
 }
