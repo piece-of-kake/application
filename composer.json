@@ -1,6 +1,6 @@
 {
     "name": "piece-of-kake/application",
-    "description": "Application codbase\u001b[D\u001b[D\u001b[D\u001b[Debase\u001b[2~",
+    "description": "Application codbase",
     "type": "project",
     "license": "MIT",
     "authors": [
@@ -17,7 +17,8 @@
         "psr/http-message": "^1.0",
         "psr/container": "^1.0",
         "ext-json": "*",
-        "php": ">=7.1"
+        "php": ">=7.1",
+        "piece-of-kake/sql-migrations": "dev-main"
     },
     "autoload": {
         "psr-4": {
