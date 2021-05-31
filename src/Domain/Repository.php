@@ -42,8 +42,8 @@ class Repository
     {
         $data = $this->gateway->retrieveOne(...$parameters);
 
-        return $data instanceof Collection
-            ? $this->factory->reconstitute($data)
+        return $data
+            ? $this->factory->reconstitute(new Collection($data))
             : null;
     }
 
