@@ -111,7 +111,7 @@ abstract class Endpoint
     private function runMiddleware(): Endpoint
     {
         foreach ($this->middleware as $middlewareInstance) {
-            $middlewareInstance->run($this->request, $this->processorRequest);
+            $middlewareInstance($this->request, $this->processorRequest);
         }
         return $this;
     }
