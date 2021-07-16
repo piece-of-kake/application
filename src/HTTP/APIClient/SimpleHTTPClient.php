@@ -5,6 +5,7 @@ namespace PoK\HTTP\APIClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
+use PoK\Exceptions\Internal\FailedHTTPRequestException;
 use PoK\ValueObject\TypeURI;
 
 class SimpleHTTPClient implements HTTPAPIClientInterface
@@ -51,9 +52,12 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             );
             $code = $response->getStatusCode();
             $data = json_decode($response->getBody()->getContents(), true);
-        } catch (ServerException | RequestException $e) {
+        } catch (ServerException $e) {
             $code = $e->getResponse()->getStatusCode();
             $data = json_decode($e->getResponse()->getBody()->getContents(), true);
+        } catch (RequestException $e) {
+            // ToDo: this needs some incident info
+            throw new FailedHTTPRequestException();
         }
 
         return new APIClientResponse($code, $data);
@@ -81,9 +85,12 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             );
             $code = $response->getStatusCode();
             $data = json_decode($response->getBody()->getContents(), true);
-        } catch (ServerException | RequestException $e) {
+        } catch (ServerException $e) {
             $code = $e->getResponse()->getStatusCode();
             $data = json_decode($e->getResponse()->getBody()->getContents(), true);
+        } catch (RequestException $e) {
+            // ToDo: this needs some incident info
+            throw new FailedHTTPRequestException();
         }
 
         return new APIClientResponse($code, $data);
@@ -111,9 +118,12 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             );
             $code = $response->getStatusCode();
             $data = json_decode($response->getBody()->getContents(), true);
-        } catch (ServerException | RequestException $e) {
+        } catch (ServerException $e) {
             $code = $e->getResponse()->getStatusCode();
             $data = json_decode($e->getResponse()->getBody()->getContents(), true);
+        } catch (RequestException $e) {
+            // ToDo: this needs some incident info
+            throw new FailedHTTPRequestException();
         }
 
         return new APIClientResponse($code, $data);
@@ -142,9 +152,12 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             );
             $code = $response->getStatusCode();
             $data = json_decode($response->getBody()->getContents(), true);
-        } catch (ServerException | RequestException $e) {
+        } catch (ServerException $e) {
             $code = $e->getResponse()->getStatusCode();
             $data = json_decode($e->getResponse()->getBody()->getContents(), true);
+        } catch (RequestException $e) {
+            // ToDo: this needs some incident info
+            throw new FailedHTTPRequestException();
         }
 
         return new APIClientResponse($code, $data);
