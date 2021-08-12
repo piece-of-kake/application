@@ -10,10 +10,10 @@
         }
     ],
     "require": {
-        "piece-of-kake/exception": "^1.1",
-        "piece-of-kake/value-object": "^1.0",
-        "piece-of-kake/validator": "^1.0",
-        "piece-of-kake/sql-query-builder": "^1.0",
+        "piece-of-kake/exception": "dev-main",
+        "piece-of-kake/value-object": "dev-main",
+        "piece-of-kake/validator": "dev-main",
+        "piece-of-kake/sql-query-builder": "dev-main",
         "psr/http-message": "^1.0",
         "psr/container": "^1.0",
         "ext-json": "*",
