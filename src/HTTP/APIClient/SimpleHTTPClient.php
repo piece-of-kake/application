@@ -52,10 +52,10 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             );
             $code = $response->getStatusCode();
             $data = json_decode($response->getBody()->getContents(), true);
-        } catch (ServerException $e) {
+        } catch (ServerException | RequestException $e) {
             $code = $e->getResponse()->getStatusCode();
-            $data = json_decode($e->getResponse()->getBody()->getContents(), true);
-        } catch (RequestException $e) {
+            $data = json_decode((string) $e->getResponse()->getBody(), true);
+        } catch (\Throwable $exception) {
             // ToDo: this needs some incident info
             throw new FailedHTTPRequestException();
         }
@@ -85,10 +85,10 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             );
             $code = $response->getStatusCode();
             $data = json_decode($response->getBody()->getContents(), true);
-        } catch (ServerException $e) {
+        } catch (ServerException | RequestException $e) {
             $code = $e->getResponse()->getStatusCode();
-            $data = json_decode($e->getResponse()->getBody()->getContents(), true);
-        } catch (RequestException $e) {
+            $data = json_decode((string) $e->getResponse()->getBody(), true);
+        } catch (\Throwable $exception) {
             // ToDo: this needs some incident info
             throw new FailedHTTPRequestException();
         }
@@ -118,10 +118,10 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             );
             $code = $response->getStatusCode();
             $data = json_decode($response->getBody()->getContents(), true);
-        } catch (ServerException $e) {
+        } catch (ServerException | RequestException $e) {
             $code = $e->getResponse()->getStatusCode();
-            $data = json_decode($e->getResponse()->getBody()->getContents(), true);
-        } catch (RequestException $e) {
+            $data = json_decode((string) $e->getResponse()->getBody(), true);
+        } catch (\Throwable $exception) {
             // ToDo: this needs some incident info
             throw new FailedHTTPRequestException();
         }
@@ -152,10 +152,10 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             );
             $code = $response->getStatusCode();
             $data = json_decode($response->getBody()->getContents(), true);
-        } catch (ServerException $e) {
+        } catch (ServerException | RequestException $e) {
             $code = $e->getResponse()->getStatusCode();
-            $data = json_decode($e->getResponse()->getBody()->getContents(), true);
-        } catch (RequestException $e) {
+            $data = json_decode((string) $e->getResponse()->getBody(), true);
+        } catch (\Throwable $exception) {
             // ToDo: this needs some incident info
             throw new FailedHTTPRequestException();
         }
