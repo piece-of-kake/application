@@ -4,18 +4,12 @@ namespace PoK\Session;
 
 class Session
 {
-    const SESSION_START_TIME = 'start';
     const SESSION_LAST_REGENERATE_TIME = 'last_regenerate';
 
     public function __construct($regenerates = false)
     {
         session_start();
-        if ($regenerates) $this->injectStartTime();
-    }
-
-    public function reset()
-    {
-        $this->resetStartTime();
+        if ($regenerates && !$this->has(self::SESSION_LAST_REGENERATE_TIME)) $this->set(self::SESSION_LAST_REGENERATE_TIME, time());
     }
 
     public function destroy()
@@ -44,42 +38,16 @@ class Session
         return hash_equals($_SESSION[$key], $value);
     }
 
-    public function regenerateIfNecessary(int $regeneratePeriod)
+    public function shouldRegenerate(int $regeneratePeriod)
     {
-        if (
+        return
             !$this->has(self::SESSION_LAST_REGENERATE_TIME) ||
-            $this->get(self::SESSION_LAST_REGENERATE_TIME) < time() - $regeneratePeriod
-        ) {
-            session_regenerate_id(true);
-            $this->set(self::SESSION_LAST_REGENERATE_TIME, time());
-        }
-        return $this;
+            $this->get(self::SESSION_LAST_REGENERATE_TIME) < time() - $regeneratePeriod;
     }
 
-    public function checkExpiration(int $expirationPeriod)
+    public function regenerate()
     {
-        if (
-            !$this->has(self::SESSION_START_TIME) ||
-            $this->get(self::SESSION_START_TIME) < time() - $expirationPeriod
-        ) {
-            $this->destroy();
-        }
-        return $this;
-    }
-
-    private function injectStartTime()
-    {
-        if (
-            !$this->has(self::SESSION_START_TIME) ||
-            !$this->has(self::SESSION_LAST_REGENERATE_TIME)
-        ) {
-            $this->resetStartTime();
-        }
-    }
-
-    private function resetStartTime()
-    {
-        $this->set(self::SESSION_START_TIME, time());
+        session_regenerate_id(true);
         $this->set(self::SESSION_LAST_REGENERATE_TIME, time());
         return $this;
     }
