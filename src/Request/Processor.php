@@ -22,7 +22,7 @@ abstract class Processor
      * @param ContainerInterface|null $container
      * @return ProcessorRequest
      */
-    public function initialize(ProcessorRequest $request, ContainerInterface $container = null): ProcessorRequest
+    public function initialize(ProcessorRequest $request, ContainerInterface $container = null): Processor
     {
         $this->request = $request;
         $this->container = $container;
