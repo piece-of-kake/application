@@ -29,14 +29,33 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
         return $this->uri;
     }
 
-    public function post($data = [])
+    /**
+     * @param array $data
+     * @param array $files Array of PoK\HTTP\APIClient\File
+     * @return APIClientResponse
+     * @throws FailedHTTPRequestException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Throwable
+     */
+    public function post(array $data = [], array $files = [])
     {
         $method = strtoupper('POST');
 
         $options = [
             'headers' => ['Accept' => 'application/json']
         ];
-        if (!empty($data))
+
+        if (!empty($files)) {
+            $options['multipart'] = [];
+            foreach ($files as $file) {
+                /** @var File $file */
+                $options['multipart'][] = $file->compile();
+            }
+            if (!empty($data))
+                foreach ($data as $name => $value)
+                    $options['multipart'][] = ['name' => $name, 'contents' => $value];
+        }
+        else if (!empty($data))
             $options['form_params'] = $data;
 
         if (is_callable($this->authorizationStringFactory)) {
