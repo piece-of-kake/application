@@ -36,8 +36,11 @@ abstract class Endpoint
 
         $parameters = [];
         // Include JSON type body
-        if ($request->hasHeader('Content-Type') && $request->getHeaderLine('Content-Type') === 'application/json')
-            $parameters += json_decode($request->getBody(), true);
+        if ($request->hasHeader('Content-Type') && $request->getHeaderLine('Content-Type') === 'application/json') {
+            $decodedData = json_decode($request->getBody(), true);
+            if (is_array($decodedData)) // This will cover the situation when request body hasn't been set
+                $parameters += $decodedData;
+        }
         // Include query parameters (GET)
         if (is_array($this->request->getQueryParams())) $parameters += $this->request->getQueryParams();
         // Include form_data parameters
