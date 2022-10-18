@@ -7,7 +7,6 @@ use PoK\Formatter\FormatterInterface;
 use PoK\Response\Response;
 use PoK\Validator\ValidationManager;
 use PoK\Middleware\Interfaces\MiddlewareInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 abstract class Endpoint
@@ -25,12 +24,7 @@ abstract class Endpoint
      */
     private $request;
 
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    public function __construct(ServerRequestInterface $request, ContainerInterface $container)
+    public function __construct(ServerRequestInterface $request)
     {
         $this->request = $request;
 
@@ -45,10 +39,9 @@ abstract class Endpoint
         if (is_array($this->request->getQueryParams())) $parameters += $this->request->getQueryParams();
         // Include form_data parameters
         if (is_array($this->request->getParsedBody())) $parameters += $this->request->getParsedBody();
-        
+
         $this->processorRequest = new ProcessorRequest($parameters, $this->request->getUploadedFiles());
 //        var_dump($this->request->getParsedBody());
-        $this->container = $container;
     }
 
     public function __invoke(): Response
@@ -146,7 +139,7 @@ abstract class Endpoint
 
     private function runProcessor(): Response
     {
-        $this->processor->initialize($this->processorRequest, $this->container);
+        $this->processor->initialize($this->processorRequest);
         $processor = $this->processor;
         $response = $processor();
         $response->setResponseDataFormatter($this->formatter);
