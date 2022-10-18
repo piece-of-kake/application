@@ -5,6 +5,7 @@ namespace PoK\HTTP\APIClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\RequestOptions;
 use PoK\Exceptions\Internal\FailedHTTPRequestException;
 use PoK\ValueObject\TypeURI;
 
@@ -12,6 +13,7 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
 {
     private $uri;
     private $authorizationStringFactory;
+    private $verifySSL = true;
 
     public function __construct(TypeURI $uri)
     {
@@ -27,6 +29,12 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
     public function getURI()
     {
         return $this->uri;
+    }
+
+    public function skipSSL()
+    {
+        $this->verifySSL = false;
+        return $this;
     }
 
     /**
@@ -62,7 +70,9 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             $options['headers']['Authorization'] = ($this->authorizationStringFactory)();
         }
 
-        $client = new Client();
+        $client = new Client([
+            RequestOptions::VERIFY => $this->verifySSL
+        ]);
         try {
             $response = $client->request(
                 $method,
@@ -95,7 +105,9 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             $options['headers']['Authorization'] = ($this->authorizationStringFactory)();
         }
 
-        $client = new Client();
+        $client = new Client([
+            RequestOptions::VERIFY => $this->verifySSL
+        ]);
         try {
             $response = $client->request(
                 $method,
@@ -128,7 +140,9 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             $options['headers']['Authorization'] = ($this->authorizationStringFactory)();
         }
 
-        $client = new Client();
+        $client = new Client([
+            RequestOptions::VERIFY => $this->verifySSL
+        ]);
         try {
             $response = $client->request(
                 $method,
@@ -162,7 +176,9 @@ class SimpleHTTPClient implements HTTPAPIClientInterface
             $options['headers']['Authorization'] = ($this->authorizationStringFactory)();
         }
 
-        $client = new Client();
+        $client = new Client([
+            RequestOptions::VERIFY => $this->verifySSL
+        ]);
         try {
             $response = $client->request(
                 $method,
