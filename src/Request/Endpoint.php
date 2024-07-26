@@ -40,8 +40,8 @@ abstract class Endpoint
         // Include form_data parameters
         if (is_array($this->request->getParsedBody())) $parameters += $this->request->getParsedBody();
 
-        $this->processorRequest = new ProcessorRequest($parameters, $this->request->getUploadedFiles());
-//        var_dump($this->request->getParsedBody());
+        // Warning: keep in mind all header names are capitalized. Example: Header-NAME becomes Header-Name
+        $this->processorRequest = new ProcessorRequest($parameters, $this->request->getUploadedFiles(), $request->getHeaders());
     }
 
     public function __invoke(): Response

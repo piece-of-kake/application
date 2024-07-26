@@ -16,10 +16,16 @@ class ProcessorRequest implements ParameterManipulationInterface
      * @var Collection
      */
     private $uploadedFiles;
-    
-    public function __construct(array $parameters = [], array $uploadedFiles = []) {
+
+    /**
+     * @var Collection
+     */
+    private $headers;
+
+    public function __construct(array $parameters = [], array $uploadedFiles = [], array $headers = []) {
         $this->parameters = new Collection($parameters);
         $this->uploadedFiles = new Collection($uploadedFiles);
+        $this->headers = new Collection($headers);
     }
 
     public function getGlobalIpAddress()
@@ -51,32 +57,42 @@ class ProcessorRequest implements ParameterManipulationInterface
         $this->parameters[$name] = $value;
         return $this;
     }
-    
+
     public function getParameter($name)
     {
         return $this->parameters->has($name)
             ? $this->parameters[$name]
             : null;
     }
-    
+
     public function hasParameter($name): bool
     {
         return $this->parameters->has($name);
     }
-    
+
     public function setUploadedFile($name, $file): ProcessorRequest
     {
         $this->uploadedFiles[$name] = $file;
         return $this;
     }
-    
+
     public function getUploadedFile($name)
     {
         return $this->uploadedFiles[$name];
     }
-    
+
     public function hasUploadedFile($name): bool
     {
-        return array_key_exists($name, $this->uploadedFiles);
+        return $this->uploadedFiles->has($name);
+    }
+
+    public function getHeader($name)
+    {
+        return $this->headers[$name];
+    }
+
+    public function hasHeader($name)
+    {
+        return $this->headers->has($name);
     }
 }
