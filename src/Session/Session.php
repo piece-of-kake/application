@@ -19,16 +19,27 @@ class Session
     const NEW_SESSION_ID = 'nsid';
     const CSRF_TOKEN = 'csrf';
 
-    public function __construct($expirationTime = 300, $obsoleteTime = 900, $useCSRF = true)
+    /**
+     * Session constructor.
+     * @param int $expirationTime Seconds after creation until the session expires.
+     * @param int $regenerationTime Seconds after expiration (not after creation) until the session can regenerate. After that the session is reset (all data cleared).
+     * @param int $obsoleteTime Seconds after an old session which was reset or renewed will be considered as foul play.
+     * @param bool $useCSRF
+     * @throws InternalServerErrorException
+     */
+    public function __construct($expirationTime, $regenerationTime, $obsoleteTime, $useCSRF = false)
     {
         session_start();
         if (!$this->has(self::CRATED_AT_TIME)) {
             // New session
             $this
                 ->set(self::CRATED_AT_TIME, time())
-                ->set(self::CSRF_TOKEN, $this->generateCSRHToken());
+                ->set(self::CSRF_TOKEN, $this->generateCSRFToken());
+        } elseif ($this->get(self::CRATED_AT_TIME) < time() - $expirationTime - $regenerationTime && !$this->has(self::DESTROYED_AT_TIME)) {
+            // Expired session unable to renew
+            $this->restart();
         } elseif ($this->get(self::CRATED_AT_TIME) < time() - $expirationTime && !$this->has(self::DESTROYED_AT_TIME)) {
-            // Expired session
+            // Expired session able to renew
             $this->regenerate();
         } elseif ($this->has(self::DESTROYED_AT_TIME)) {
             // Obslete session
@@ -102,6 +113,45 @@ class Session
         return session_id();
     }
 
+    /**
+     * This will create a new empty session and relate the old one to it.
+     * This should not be used from the outside context.
+     * It is used internally by the expiration mechanism to be able to detect fraudulent access.
+     *
+     * For outside context use $this->destroy() to log the user out, reset or destroy the session.
+     * @return Session
+     */
+    private function restart()
+    {
+        // New session ID is required to set proper session ID
+        // when session ID is not set due to unstable network.
+        $newSessionId = session_create_id();
+        $this
+            ->set(self::NEW_SESSION_ID, $newSessionId)
+            ->set(self::DESTROYED_AT_TIME, time()); // Set destroy timestamp
+
+        // Write and close current session;
+        session_commit();
+
+        // Start session with new session ID
+        session_id($newSessionId);
+        ini_set('session.use_strict_mode', 0);
+        session_start(); // If we use session_regenerate_id here we will switch from the old one to the new one without writing the new session ID into the old session
+        ini_set('session.use_strict_mode', 1);
+
+        // Clean the new session
+        $this
+            ->set(self::CRATED_AT_TIME, time())
+            ->set(self::CSRF_TOKEN, $this->generateCSRFToken());
+
+        return $this;
+    }
+
+    /**
+     * This will create a new session and migrate the data into it.
+     * The old session will be marked as obsolete by setting the destruction time.
+     * @return Session
+     */
     public function regenerate()
     {
         // Backing up old data
@@ -129,12 +179,12 @@ class Session
         // Clean the new session
         $this
             ->set(self::CRATED_AT_TIME, time())
-            ->set(self::CSRF_TOKEN, $this->generateCSRHToken());
+            ->set(self::CSRF_TOKEN, $this->generateCSRFToken());
 
         return $this;
     }
 
-    private function generateCSRHToken()
+    private function generateCSRFToken()
     {
         return bin2hex(random_bytes(32));
     }
