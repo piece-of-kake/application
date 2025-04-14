@@ -29,6 +29,7 @@ class Session
      */
     public function __construct($expirationTime, $regenerationTime, $obsoleteTime, $useCSRF = false)
     {
+        ini_set('session.use_strict_mode', 1);
         session_start();
         if (!$this->has(self::CRATED_AT_TIME)) {
             // New session
@@ -54,6 +55,7 @@ class Session
                 // NOTE: Do not try to set session ID again if you would like to remove
                 // authentication flag.
                 session_commit();
+                ini_set('session.use_strict_mode', 0);
                 session_id($this->get(self::NEW_SESSION_ID));
                 session_start();
             }
@@ -137,7 +139,6 @@ class Session
         session_id($newSessionId);
         ini_set('session.use_strict_mode', 0);
         session_start(); // If we use session_regenerate_id here we will switch from the old one to the new one without writing the new session ID into the old session
-        ini_set('session.use_strict_mode', 1);
 
         // Clean the new session
         $this
@@ -171,7 +172,6 @@ class Session
         session_id($newSessionId);
         ini_set('session.use_strict_mode', 0);
         session_start(); // If we use session_regenerate_id here we will switch from the old one to the new one without writing the new session ID into the old session
-        ini_set('session.use_strict_mode', 1);
 
         // Replacing old session data into the new session
         $_SESSION = $oldSessionData;
